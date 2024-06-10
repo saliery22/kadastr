@@ -148,8 +148,9 @@ $(".livesearch").chosen({search_contains : true});
 
 
 
-
 var layerControl=0;
+var layerGrup1=0;
+var layerGrup2=0;
 function initMap() {
   
   map = L.map('map', {
@@ -168,119 +169,43 @@ function initMap() {
 layerControl=L.control.layers(basemaps).addTo(map);
 basemaps.OSM.addTo(map);
   
-
- var requestURL =   "1218_680.geojson";
+ let zemgrup=[];
+ let kadgrup=[];
+ var requestURL =   "data.geojson";
  var request = new XMLHttpRequest();
  request.open("GET", requestURL);
- //request1.responseType = "json";
+ request.responseType = "json";
  request.send();
 
  request.onload = function () {
-   let files = request.response;
-	 console.log(files);
-   let pos = -1;
-   while ((pos = files.indexOf("=\"/gz/", pos + 1)) != -1) {names.push(files.substr(pos+6, 8));}
-   tile(0);
-  };
-}
-let names=[];
-let zemgrup=[];
-let kadgrup=[];
-let km=2.963;
-function tile(n) {
-  if(n==names.length){
-    let lgeozonee = L.layerGroup(kadgrup);
-    layerControl.addOverlay(lgeozonee, "Кадастр інше");
-     lgeozonee = L.layerGroup(zemgrup);
-    layerControl.addOverlay(lgeozonee, "Кадастр землі");
-    zemgrup
-    $(".livesearch").chosen({search_contains : true});
-    $('#lis0').on('change', function(evt, params) {
-     kadgrup[parseInt($("#lis0").chosen().val())].openPopup();
-     });
-     map.setView([51.62995, 33.64288], 9);
-   return;
-  }
- 
-  let fname =names[n];
-//=============================================================================================================
- var requestURL2 =   "/gz/"+fname+".geojson";
- var request2= new XMLHttpRequest();
- request2.open("GET", requestURL2);
- request2.responseType = "json";
- request2.send();
-
- request2.onload = function () {
-  
-  let Xtransform=fname.split('_')[0]-1216;
-  let Ytransform=679-fname.split('_')[1];
-  let mashtab1 =mashtabX();
-  let mashtab2 =mashtabY();
-  let fr_point=L.latLng(51.617970, 33.749981);
-  var pointL0 = fr_point;
-  var pointXY0 = map.latLngToContainerPoint(pointL0);
-  pointXY0.x+=Math.round(Xtransform*4096/mashtab1*km);
-  pointXY0.y-=Math.round(Ytransform*4096/mashtab2*km);
-
-   var kadastr = request2.response;
-   let data = kadastr.features;
-   for(var i=0; i < data.length; i++){
-    let poly = data[i].geometry.coordinates;
-    //console.log(poly.length);
-    for(var ii=0; ii < poly.length; ii++){
-      for(var iii=0; iii < poly[ii].length; iii++){
-        for(var iiii=0; iiii < poly[ii][iii].length; iiii++){
-
-          let shift= map.containerPointToLatLng(L.point(pointXY0.x+(poly[ii][iii][iiii][0]/mashtab1*km),pointXY0.y-(poly[ii][iii][iiii][1]/mashtab2*km)));
-
-          poly[ii][iii][iiii][0]=shift.lat;
-          poly[ii][iii][iiii][1]=shift.lng;
-        }
-      }
-    }
-     
-    
-    let address = data[i].properties.address;
-    let cadnum = data[i].properties.cadnum;
-    let category = data[i].properties.category;
-    let ownership = data[i].properties.ownership;
-    let purpose = data[i].properties.purpose;
+  var data = request.response;
+  for(var i=0; i < data.length; i++){
+    let poly = data[i].coordinates;
+    let address = data[i].address;
+    let cadnum = data[i].cadnum;
+    let category = data[i].category;
+    let ownership = data[i].ownership;
+    let purpose = data[i].purpose;
     let link = "https://kadastr.live/parcel/"+cadnum;
     var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3, smoothFactor:2});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
-   
-
-
     $('#lis0').append($('<option>').text(cadnum).val(i));
-   }
-
-   n++;
-   tile(n);
- };
-
+  }
+  layerGrup1 = L.layerGroup(kadgrup);
+  layerControl.addOverlay(layerGrup1, "Кадастр інше");
+  layerGrup2 = L.layerGroup(zemgrup);
+  layerControl.addOverlay(layerGrup2, "Кадастр землі");
+  $(".livesearch").chosen({search_contains : true});
+  $('#lis0').on('change', function(evt, params) {
+   kadgrup[parseInt($("#lis0").chosen().val())].openPopup();
+   });
+   map.setView([51.62995, 33.64288], 9);
+  };
 }
 
-function mashtabX() {
-  let fr_point=L.latLng(51.617970, 33.749981);
-  var pointL0 = fr_point;
-  var pointXY0 = map.latLngToContainerPoint(pointL0);
-  var pointXY1 = L.point(pointXY0.x+1000,pointXY0.y);
-  var pointL1 = map.containerPointToLatLng(pointXY1);
-  var dis1 = map.distance(pointL0,pointL1);
-  var mashtab1 = (dis1/1000).toFixed(5);
- return mashtab1;
-}
-function mashtabY() {
-  let fr_point=L.latLng(51.617970, 33.749981);
-  var pointL0 = fr_point;
-  var pointXY0 = map.latLngToContainerPoint(pointL0);
-  var pointXY2 = L.point(pointXY0.x,pointXY0.y+1000);
-  var pointL2 = map.containerPointToLatLng(pointXY2);
-  var dis2 = map.distance(pointL0,pointL2);
-  var mashtab2 = (dis2/1000).toFixed(5);
- return mashtab2;
-}
+
+
 
 //let ps = prompt('');
 //if(ps==55555){
@@ -322,24 +247,6 @@ $(document).ready(function () {
 
 
 
-function Gozone_History() {
-let now = new Date();
-   let month = now.getMonth()+1;   
-   let data = now.getDate()+ '.' +(month < 10 ? '0' : '') + month + '.' +now.getFullYear();
-   let zone = Vibranaya_zona;
-   let info = Vibranaya_zona.d+'||'+data+'|'+$('#robota').val();
-   if(this.innerText=="додати"){
-     let remotee= wialon.core.Remote.getInstance();  
-  remotee.remoteCall('resource/update_zone',{"n":zone.n,"d":info,"t":zone.t,"w":zone.w,"f":zone.f,"c":zone.c,"tc":zone.tc,"ts":zone.ts,"min":zone.min,"max":zone.max,"oldItemId":zone.rid,"oldZoneId":zone.id,"libId":"","path":"","p":zone.p,"id":zone.id,"itemId":zone.rid,"callMode":"update"},function (error) { if (error) {msg(wialon.core.Errors.getErrorText(error));}else{
- $('#obrobka').append("<tr><td>"+data+"</td><td>"+$('#robota').val()+"</td><td>&#10060</td></tr>");
-  }}); 
-   }else{
-   $('#robota').val(this.innerText);
- 
-   }
-
-
-}
 
 
 
