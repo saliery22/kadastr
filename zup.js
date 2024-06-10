@@ -157,11 +157,9 @@ function initMap() {
     inertia: false,
     zoomAnimation: false,
     fadeAnimation: false
-  
     
   }).setView([51.62995, 33.64288], 20);
   let sc= L.control.scale({imperial:false}).addTo(map);
-  console.log(map.getZoom())
   var basemaps = {
     OSM:L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}),
     'Google Hybrid':L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{ subdomains:['mt0','mt1','mt2','mt3'],layers: 'OSM-Overlay-WMS,TOPO-WMS'})
@@ -170,35 +168,8 @@ function initMap() {
 layerControl=L.control.layers(basemaps).addTo(map);
 basemaps.OSM.addTo(map);
   
- map.on('dblclick', function(e) {  });
- let kk=0;
 
- map.on('click', function(e) { 
-   if(kk==0)kk=e.latlng;
-   console.log(map.distance(kk,e.latlng));
-   kk=e.latlng;
-  //console.log(map.getSize());
-  //var pointXY0 = L.point(e.containerPoint.x,e.containerPoint.y);
- // var pointXY1 = L.point(e.containerPoint.x+1000,e.containerPoint.y);
-  //var pointXY2 = L.point(e.containerPoint.x,e.containerPoint.y+1000);
-  //var pointL0 = map.containerPointToLatLng(pointXY0);
-  //var pointL1 = map.containerPointToLatLng(pointXY1);
-  //var pointL2 = map.containerPointToLatLng(pointXY2);
-  //var dis1 = map.distance(pointL0,pointL1);
-  //var dis2 = map.distance(pointL0,pointL2);
-  //var mashtab1 = (dis1/1000).toFixed(5);
-  //var mashtab2 = (dis2/1000).toFixed(5);
- // console.log(mashtab1);
- // console.log(mashtab2);
-
-  //L.marker(pointL0).addTo(map);
-  //L.marker(pointL1).addTo(map);
-  //L.marker(pointL2).addTo(map);
-  });
-
- 
-
- var requestURL =   "./gz";
+ var requestURL =   "/gz";
  var request = new XMLHttpRequest();
  request.open("GET", requestURL);
  //request1.responseType = "json";
@@ -232,7 +203,7 @@ function tile(n) {
  
   let fname =names[n];
 //=============================================================================================================
- var requestURL2 =   "./gz/"+fname+".geojson";
+ var requestURL2 =   "/gz/"+fname+".geojson";
  var request2= new XMLHttpRequest();
  request2.open("GET", requestURL2);
  request2.responseType = "json";
