@@ -187,7 +187,7 @@ basemaps.OSM.addTo(map);
     let ownership = data[i].ownership;
     let purpose = data[i].purpose;
     let link = "https://kadastr.live/parcel/"+cadnum;
-    var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3, smoothFactor:2});
+    var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
     $('#lis0').append($('<option>').text(cadnum).val(i));
