@@ -169,7 +169,7 @@ layerControl=L.control.layers(basemaps).addTo(map);
 basemaps.OSM.addTo(map);
   
 
- var requestURL =   "/gz";
+ var requestURL =   "gz";
  var request = new XMLHttpRequest();
  request.open("GET", requestURL);
  //request1.responseType = "json";
