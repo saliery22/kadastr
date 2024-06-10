@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wialon Marshruti</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="//hst-api.wialon.com/wsdk/script/wialon.js"></script>
+    <script type="text/javascript" src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+
+   
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
+
+</head>
+<body>
+<style>
+
+#map { width: 80%; height: 900px; float: left; margin: auto; font-family: "Arial"; font-size: 11px;}
+#unit_info { width: 20%; height:900px; margin-left: 80%; overflow-y: auto; overflow-x: auto;}
+#inftb td{ border: 1px solid rgb(78, 78, 78);  padding: 2px 10px; position: absolute}
+#log { width: 100%; border: 1px solid #c6c6c6; max-height:50px; overflow-y: auto; margin: 0px 0px 10px 0px;position:absolute;bottom:0;}
+body{ font-family: "Arial"; font-size: 12px; background: #f8f7f7;}
+thead {  border: 0px; height:30px; }
+table {width: auto; margin: 10px 5px 10px 5px; border: 1px solid #dddddd; border-collapse: collapse; text-align: center;}
+button {
+    
+    outline: none;
+    border: 1px solid rgb(49, 47, 47);
+    border-radius: 3px;
+    box-shadow: 0 4px 6px rgb(65 132 144 / 10%), 0 1px 3px rgb(0 0 0 / 8%);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+button:hover {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.45), 0 1px 3px 1px rgb(26 115 232 / 30%);
+}
+button, input, span, select,textarea {margin: 3px 0px 0px 3px;   font-family: "Arial"; font-size: 12px;}
+</style>
+
+
+<!-- load map -->
+ <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+
+   
+
+
+<div id="map"></div>
+<div id="unit_info">
+<div>
+    <select class='livesearch' id='lis0'style='width:100%;'> <option value='0'>—</option></select>
+</div>
+<button id='hidezone'>приховати геозону</button>
+<table id="unit_table"></table>
+<div id="log"></div>
+</div>     
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+
+
+  <script type="module" src="zup.js"></script> 
+
+</body>
+</html>
