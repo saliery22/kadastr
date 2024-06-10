@@ -169,7 +169,7 @@ layerControl=L.control.layers(basemaps).addTo(map);
 basemaps.OSM.addTo(map);
   
 
- var requestURL =   "gz";
+ var requestURL =   "1218_680.geojson";
  var request = new XMLHttpRequest();
  request.open("GET", requestURL);
  //request1.responseType = "json";
@@ -177,6 +177,7 @@ basemaps.OSM.addTo(map);
 
  request.onload = function () {
    let files = request.response;
+	 console.log(files);
    let pos = -1;
    while ((pos = files.indexOf("=\"/gz/", pos + 1)) != -1) {names.push(files.substr(pos+6, 8));}
    tile(0);
