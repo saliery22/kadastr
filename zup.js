@@ -151,6 +151,7 @@ $(".livesearch").chosen({search_contains : true});
 var layerControl=0;
 var layerGrup1=0;
 var layerGrup2=0;
+let ALLZONES=[];
 function initMap() {
   
   map = L.map('map', {
@@ -190,6 +191,7 @@ basemaps.OSM.addTo(map);
     var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
+    ALLZONES.push(polygon);
     $('#lis0').append($('<option>').text(cadnum).val(i));
   }
   layerGrup1 = L.layerGroup(kadgrup);
@@ -198,7 +200,7 @@ basemaps.OSM.addTo(map);
   layerControl.addOverlay(layerGrup2, "Кадастр землі");
   $(".livesearch").chosen({search_contains : true});
   $('#lis0').on('change', function(evt, params) {
-   kadgrup[parseInt($("#lis0").chosen().val())].openPopup();
+   ALLZONES[parseInt($("#lis0").chosen().val())].openPopup();
    });
    map.setView([51.62995, 33.64288], 9);
   };
