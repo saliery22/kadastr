@@ -156,8 +156,8 @@ function initMap() {
     doubleClickZoom: false,
     inertia: false,
     zoomAnimation: false,
-    fadeAnimation: false,
-    dragging:false
+    fadeAnimation: false
+  
     
   }).setView([51.62995, 33.64288], 20);
   let sc= L.control.scale({imperial:false}).addTo(map);
