@@ -204,7 +204,7 @@ basemaps.OSM.addTo(map);
                }
         let polilane = L.polyline(ramka, {color: '#0000FF',weight:2}).addTo(map);
         geo_layer.push(polilane);     
-    }
+    });
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
     ALLZONES.push(polygon);
     $('#lis0').append($('<option>').text(cadnum).val(i));
