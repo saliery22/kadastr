@@ -194,7 +194,7 @@ basemaps.OSM.addTo(map);
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     polygon.on('click', function(e) {
 	clearGEO();
-	    console.log(e.target)
+	    console.log(e.target._latlngs[0])
 	//let point = e.target._latlngs[0];
         //let ramka=[];
         //for (let i = 0; i < point.length; i++) {
