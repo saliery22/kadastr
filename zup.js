@@ -188,8 +188,23 @@ basemaps.OSM.addTo(map);
     let ownership = data[i].ownership;
     let purpose = data[i].purpose;
     let link = "https://kadastr.live/parcel/"+cadnum;
+    let color = '#FF00FF';
+    if(category=='Землі сільськогосподарського призначення') {color='#FF000';} 
     var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
+    polygon.on('click', function(e) {
+	clearGEO();
+	let point = e.target._latlngs[0];
+        let ramka=[];
+        for (let i = 0; i < point.length; i++) {
+        let lat =point[i].lat;
+        let lng =point[i].lng;
+        ramka.push([lat, lng]);
+        if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
+               }
+        let polilane = L.polyline(ramka, {color: '#0000FF',weight:2}).addTo(map);
+        geo_layer.push(polilane);     
+    }
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
     ALLZONES.push(polygon);
     $('#lis0').append($('<option>').text(cadnum).val(i));
