@@ -190,7 +190,7 @@ basemaps.OSM.addTo(map);
     let link = "https://kadastr.live/parcel/"+cadnum;
     let color = '#FF00FF';
     if(category=='Землі сільськогосподарського призначення') {color='#FF000';} 
-    var polygon = L.polygon(poly, {color: '#FF00FF', stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
+    var polygon = L.polygon(poly, {color: color, stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     polygon.on('click', function(e) {
 	clearGEO();
