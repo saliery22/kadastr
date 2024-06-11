@@ -189,12 +189,13 @@ basemaps.OSM.addTo(map);
     let purpose = data[i].purpose;
     let link = "https://kadastr.live/parcel/"+cadnum;
     let color = '#FF00FF';
-    if(category=='Землі сільськогосподарського призначення') {color='#FF000';} 
+    if(category=='Землі сільськогосподарського призначення') {color='#FF0000';} 
     var polygon = L.polygon(poly, {color: color, stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
     polygon.on('click', function(e) {
 	clearGEO();
-	let point = e.target._latlngs[0];
+	    console.log(e.target)
+	//let point = e.target._latlngs[0];
         //let ramka=[];
         //for (let i = 0; i < point.length; i++) {
         //let lat =point[i].lat;
