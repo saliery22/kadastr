@@ -195,8 +195,8 @@ basemaps.OSM.addTo(map);
     polygon.on('click', function(e) {
 	clearGEO();
 	    console.log(e.target._latlngs[0][0])
-	if(e.target._latlngs[0]){
-	let point = e.target._latlngs[0];
+	if(e.target._latlngs[0][0]){
+	let point = e.target._latlngs[0][0];
         let ramka=[];
         for (let i = 0; i < point.length; i++) {
         let lat =point[i].lat;
