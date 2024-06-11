@@ -195,16 +195,16 @@ basemaps.OSM.addTo(map);
     polygon.on('click', function(e) {
 	clearGEO();
 	    console.log(e.target._latlngs[0])
-	//let point = e.target._latlngs[0];
-        //let ramka=[];
-        //for (let i = 0; i < point.length; i++) {
-        //let lat =point[i].lat;
-        //let lng =point[i].lng;
-        //ramka.push([lat, lng]);
-        //if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
-        //       }
-        //let polilane = L.polyline(ramka, {color: '#0000FF',weight:2}).addTo(map);
-       // geo_layer.push(polilane);     
+	let point = e.target._latlngs[0];
+        let ramka=[];
+        for (let i = 0; i < point.length; i++) {
+        let lat =point[i].lat;
+        let lng =point[i].lng;
+        ramka.push([lat, lng]);
+        if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
+               }
+        let polilane = L.polyline(ramka, {color: '#0000FF',weight:2}).addTo(map);
+        geo_layer.push(polilane);     
     });
     if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
     ALLZONES.push(polygon);
