@@ -2,7 +2,7 @@
 var TOKEN = '0999946a10477f4854a9e6f27fcbe8428FD86B11D191C63FBA2E7E99A76BA983502BAA20';
 
 // global variables
-var map,Vibranaya_zona;
+var map;
 
 
 
@@ -50,10 +50,10 @@ function init() { // Execute after login succeed
 
 
 // will be called after updateDataFlags success
-let geozonepoint = [];
 let geozones = [];
 let geozonesgrup = [];
 let IDzonacord=[];
+let geold=null;
 function initUIData() {
   var session = wialon.core.Session.getInstance();
   var resource = wialon.core.Session.getInstance().getItem(20030); //26227 - Gluhiv 20030 "11_ККЗ"
@@ -80,41 +80,65 @@ function initUIData() {
            IDzonacord[zone.id]=cord;
            
            var geozona =  L.polygon([cord], {color: '#03d1ec', stroke: true,weight: 2, opacity: 0.8, fillOpacity: 0.3, fillColor: '#03d1ec'});
-          // geozona.bindPopup(zone.n);
-           geozona.bindTooltip(zone.n +'<br />' +zonegr,{opacity:0.8});
+           geozona.bindPopup(zone.n +'<br />' +zonegr);
+           //geozona.bindTooltip(zone.n +'<br />' +zonegr,{opacity:0.8,sticky:true});
            geozona.zone = zone;
            geozones.push(geozona);   
-
+           $('#lis1').append($('<option>').text(zone.n).val(geozones.length-1));
            geozona.on('click', function(e) {
-           
-           geozonepoint.length =0;
-           Vibranaya_zona = this.zone;
            clearGEO();
-           $('#hidezone').click(function() { map.removeLayer(e.target);});
+           //$('#hidezone').click(function() { map.removeLayer(e.target);});
               //msg(Object.entries(e.target.name));
              // msg(e.target._latlngs[0][1].lat);
              //msg(e.target._latlngs[0].length);
              // msg(e.target.res);
               let point = e.target._latlngs[0];
+              if(geold){
+                geold.setStyle({color: '#03d1ec', stroke: true,weight: 2, opacity: 0.8,fill: true, fillOpacity: 0.3, fillColor: '#03d1ec'});
+                geold=this;
+                geold.setStyle({color: '#0000FF', stroke: true,weight: 3, opacity: 0.8,fill: false});
+              }else{
+                geold=this;
+                geold.setStyle({color: '#0000FF', stroke: true,weight: 3, opacity: 0.8,fill: false});
+              }
+              
               let ramka=[];
                for (let i = 0; i < point.length; i++) {
                let lat =point[i].lat;
                let lng =point[i].lng;
-               geozonepoint.push({x:lat, y:lng}); 
-               if(i == geozonepoint.length-1 && geozonepoint[0]!=geozonepoint[i])geozonepoint.push(geozonepoint[0]); 
                ramka.push([lat, lng]);// LatLng - for Leaflet
               // ramka.push([lng, lat]);// LngLat - for TURF
                if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
                }
-               let polilane = L.polyline(ramka, {color: 'red'}).addTo(map);
+               let polilane = L.polyline(ramka, {color: '#0000FF'}).addTo(map);
                geo_layer.push(polilane); 
               
           });
-
+        
       }
+      $(".livesearch").chosen({search_contains : true});
+
+      $('#lis1').on('change', function(evt, params) {
+        clearGEO();
+        if(geozones[parseInt($("#lis1").chosen().val())]._latlngs[0]){
+        let point = geozones[parseInt($("#lis1").chosen().val())]._latlngs[0];
+              let ramka=[];
+              let cord = point[0];
+              for (let i = 0; i < point.length; i++) {
+              let lat =point[i].lat;
+              let lng =point[i].lng;
+              ramka.push([lat, lng]);
+              if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
+                     }
+              map.setView(cord, 14);
+              zoomupdate();
+              let polilane = L.polyline(ramka, {color: '#0000FF',weight:3}).addTo(map);
+              geo_layer.push(polilane);  
+        }
+       });
   
-      let lgeozone = L.layerGroup(geozones);
-      layerControl.addOverlay(lgeozone, "Геозони");
+      //let lgeozone = L.layerGroup(geozones);
+      //layerControl.addOverlay(lgeozone, "Геозони");
    
 
       for (var key in gzgroop) {
@@ -138,10 +162,8 @@ function initUIData() {
 
  
   
-$(".livesearch").chosen({search_contains : true});
- $('#lis0').on('change', function(evt, params) {
- 
-  });
+
+
    
 }
 
@@ -149,9 +171,12 @@ $(".livesearch").chosen({search_contains : true});
 
 
 var layerControl=0;
-var layerGrup1=0;
-var layerGrup2=0;
-let ALLZONES=[];
+var Layer=0;
+var layerGrup=0;
+var lgeozone=0;
+let basemaps=0;
+let cord0=0;
+let allgeo=[];
 function initMap() {
   
   map = L.map('map', {
@@ -160,18 +185,57 @@ function initMap() {
     zoomAnimation: false,
     fadeAnimation: false
     
-  }).setView([51.62995, 33.64288], 20);
+  }).setView([51.62995, 33.64288], 9);
   let sc= L.control.scale({imperial:false}).addTo(map);
-  var basemaps = {
+   basemaps = {
     OSM:L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {}),
     'Google Hybrid':L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{ subdomains:['mt0','mt1','mt2','mt3'],layers: 'OSM-Overlay-WMS,TOPO-WMS'})
 };
 
 layerControl=L.control.layers(basemaps).addTo(map);
 basemaps.OSM.addTo(map);
+layerGrup = L.featureGroup().addTo(map);
+lgeozone = L.featureGroup().addTo(map);
+
+
+
+
+cord0 =map.getCenter();
+
+map.on('mouseup', function(e) {
+  let cord=map.getCenter();
+  if(map.distance(cord0, cord)>1000){
+    let zoom = map.getZoom();
+    let radius=10000;
+    if(zoom>=13){radius=8000}
+    if(zoom>=14){radius=4000}
+    if(zoom>=15){radius=2000}
+    cord0=cord;
+    layerGrup.clearLayers();
+    lgeozone.clearLayers();
+    if(zoom>=13){
+    for(var i=0; i < allgeo.length; i++){
+        if(allgeo[i].options.a==1){if($("#pai").is(":checked")==false) {continue;}}
+        if(allgeo[i].options.a==0){if($("#inshe").is(":checked")==false) {continue;}}
+          let latlng = allgeo[i]._latlngs[0][0][0];
+      if(map.distance(cord0,latlng)<radius){allgeo[i].addTo(layerGrup);}
+    }
+  }
+    if($("#polya").is(":checked")) {
+      for(var i=0; i < geozones.length; i++){
+        let latlng = geozones[i]._latlngs[0][0];
+        if(map.distance(cord0,latlng)<radius*20){geozones[i].addTo(lgeozone);}
+      }
+    }
+  }
+  //lgeozone.bringToFront();
+});
+map.on('zoomend', function(e) {zoomupdate();});
   
- let zemgrup=[];
- let kadgrup=[];
+
+$('input[name=checkbox]').change(function() {  zoomupdate()});
+ 
+
  var requestURL =   "data.geojson";
  var request = new XMLHttpRequest();
  request.open("GET", requestURL);
@@ -189,41 +253,78 @@ basemaps.OSM.addTo(map);
     let purpose = data[i].purpose;
     let link = "https://kadastr.live/parcel/"+cadnum;
     let color = '#FF00FF';
-    if(category=='Землі сільськогосподарського призначення') {color='#FF0000';} 
-    var polygon = L.polygon(poly, {color: color, stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3});
-    polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>');
+    let ind=0;
+    if(category=='Землі сільськогосподарського призначення') {color='#FF0000'; ind=1;} 
+    var polygon = L.polygon(poly, {color: color, stroke: true,weight: 1, opacity: 0.4, fillOpacity: 0.3, a:ind});
+    polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>',{minWidth: 100});
+    allgeo.push(polygon);
     polygon.on('click', function(e) {
-	clearGEO();
-	if(e.target._latlngs[0][0]){
-	let point = e.target._latlngs[0][0];
-        let ramka=[];
-        for (let i = 0; i < point.length; i++) {
-        let lat =point[i].lat;
-        let lng =point[i].lng;
-        ramka.push([lat, lng]);
-        if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
-               }
-        let polilane = L.polyline(ramka, {color: '#0000FF',weight:2}).addTo(map);
-        geo_layer.push(polilane);  
-	}
-    });
-    if(category=='Землі сільськогосподарського призначення') {zemgrup.push(polygon);} else{ kadgrup.push(polygon);}
-    ALLZONES.push(polygon);
+      clearGEO();
+      if(e.target._latlngs[0][0]){
+      let point = e.target._latlngs[0][0];
+            let ramka=[];
+            for (let i = 0; i < point.length; i++) {
+            let lat =point[i].lat;
+            let lng =point[i].lng;
+            ramka.push([lat, lng]);
+            if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
+                   }
+            let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
+            geo_layer.push(polilane);  
+      }
+        });
     $('#lis0').append($('<option>').text(cadnum).val(i));
   }
-  layerGrup1 = L.layerGroup(kadgrup);
-  layerControl.addOverlay(layerGrup1, "Кадастр інше");
-  layerGrup2 = L.layerGroup(zemgrup);
-  layerControl.addOverlay(layerGrup2, "Кадастр землі");
-  $(".livesearch").chosen({search_contains : true});
+
   $('#lis0').on('change', function(evt, params) {
-   ALLZONES[parseInt($("#lis0").chosen().val())].openPopup();
+    clearGEO();
+    if(allgeo[parseInt($("#lis0").chosen().val())]._latlngs[0][0]){
+    let point = allgeo[parseInt($("#lis0").chosen().val())]._latlngs[0][0];
+          let ramka=[];
+          let cord = point[0];
+          for (let i = 0; i < point.length; i++) {
+          let lat =point[i].lat;
+          let lng =point[i].lng;
+          ramka.push([lat, lng]);
+          if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
+                 }
+          let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
+          geo_layer.push(polilane);  
+          map.setView(cord, 15);
+          zoomupdate();
+    }
    });
-   map.setView([51.62995, 33.64288], 9);
   };
 }
 
+function zoomupdate(){
+  
+  let zoom = map.getZoom();
+  let radius=10000;
+  let cord=map.getCenter();
+    cord0=cord;
+  if(zoom>=13){radius=8000}
+  if(zoom>=14){radius=4000}
+  if(zoom>=15){radius=2000}
+  layerGrup.clearLayers();
+  lgeozone.clearLayers();
+  if(zoom>=13){
+  for(var i=0; i < allgeo.length; i++){
+    if(allgeo[i].options.a==1){if($("#pai").is(":checked")==false) {continue;} }
+    if(allgeo[i].options.a==0){if($("#inshe").is(":checked")==false) {continue;} }
+    let latlng = allgeo[i]._latlngs[0][0][0];
+    if(map.distance(cord0,latlng)<radius){ allgeo[i].addTo(layerGrup); }
+  }
+}
+  if($("#polya").is(":checked")) {
+    for(var i=0; i < geozones.length; i++){
+      let latlng = geozones[i]._latlngs[0][0];
+      if(map.distance(cord0,latlng)<radius*20){geozones[i].addTo(lgeozone);}
+    }
+  }
 
+//basemaps.OSM.redraw();
+}
 
 
 //let ps = prompt('');
