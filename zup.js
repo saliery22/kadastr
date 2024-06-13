@@ -86,7 +86,7 @@ function initUIData() {
            geozones.push(geozona);   
            $('#lis1').append($('<option>').text(zone.n).val(geozones.length-1));
            geozona.on('click', function(e) {
-           clearGEO();
+           clearGEO(geo_layer);
            //$('#hidezone').click(function() { map.removeLayer(e.target);});
               //msg(Object.entries(e.target.name));
              // msg(e.target._latlngs[0][1].lat);
@@ -102,16 +102,8 @@ function initUIData() {
                 geold.setStyle({color: '#0000FF', stroke: true,weight: 3, opacity: 0.8,fill: false});
               }
               
-              let ramka=[];
-               for (let i = 0; i < point.length; i++) {
-               let lat =point[i].lat;
-               let lng =point[i].lng;
-               ramka.push([lat, lng]);// LatLng - for Leaflet
-              // ramka.push([lng, lat]);// LngLat - for TURF
-               if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
-               }
-               let polilane = L.polyline(ramka, {color: '#0000FF'}).addTo(map);
-               geo_layer.push(polilane); 
+             
+               $("#info_pole").html(this.zone.n);
               
           });
         
@@ -119,7 +111,7 @@ function initUIData() {
       $(".livesearch").chosen({search_contains : true});
 
       $('#lis1').on('change', function(evt, params) {
-        clearGEO();
+        clearGEO(geo_layer);
         if(geozones[parseInt($("#lis1").chosen().val())]._latlngs[0]){
         let point = geozones[parseInt($("#lis1").chosen().val())]._latlngs[0];
               let ramka=[];
@@ -259,7 +251,7 @@ $('input[name=checkbox]').change(function() {  zoomupdate()});
     polygon.bindPopup('НОМЕР:   '+cadnum+'<br />'+'АДРЕСА:   '+address+'<br />'+'ПРИЗНАЧЕННЯ:   '+category+'<br />'+'ВЛАСНІСТЬ:   '+ownership+'<br />'+'ВИКОРИСТАННЯ:   '+purpose +'<br /> <a href="'+link+'"target="_blanc">держ реестр</a>',{minWidth: 100});
     allgeo.push(polygon);
     polygon.on('click', function(e) {
-      clearGEO();
+      if($("#grup_info").is(":checked")==false) {clearGEO(geo_layer1);}
       if(e.target._latlngs[0][0]){
       let point = e.target._latlngs[0][0];
             let ramka=[];
@@ -270,14 +262,20 @@ $('input[name=checkbox]').change(function() {  zoomupdate()});
             if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
                    }
             let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
-            geo_layer.push(polilane);  
+            geo_layer1.push(polilane);
+             if($("#grup_info").is(":checked")==false) {
+              $("#info_kad").html(this._popup._content); 
+             }else{
+              $("#info_kad").html( $("#info_kad").html()+'<br />'+this._popup._content); 
+             }
+           
       }
         });
     $('#lis0').append($('<option>').text(cadnum).val(i));
   }
 
   $('#lis0').on('change', function(evt, params) {
-    clearGEO();
+    clearGEO(geo_layer1);
     if(allgeo[parseInt($("#lis0").chosen().val())]._latlngs[0][0]){
     let point = allgeo[parseInt($("#lis0").chosen().val())]._latlngs[0][0];
           let ramka=[];
@@ -288,10 +286,10 @@ $('input[name=checkbox]').change(function() {  zoomupdate()});
           ramka.push([lat, lng]);
           if(i == point.length-1 && ramka[0]!=ramka[i])ramka.push(ramka[0]); 
                  }
-          let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
-          geo_layer.push(polilane);  
           map.setView(cord, 15);
           zoomupdate();
+          let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
+          geo_layer1.push(polilane);  
     }
    });
   };
@@ -357,10 +355,12 @@ $(document).ready(function () {
   
   
  let geo_layer=[];
- function clearGEO(){  
-   for(var i=0; i < geo_layer.length; i++){
-  map.removeLayer(geo_layer[i]);
-   if(i == geo_layer.length-1){geo_layer=[];}
+ let geo_layer1=[];
+
+ function clearGEO(data){  
+   for(var i=0; i < data.length; i++){
+  map.removeLayer(data[i]);
+   if(i == data.length-1){data=[];}
   }
 
  }
