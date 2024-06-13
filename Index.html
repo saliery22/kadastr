@@ -25,6 +25,8 @@
 #unit_info { width: 20%; height:900px; margin-left: 80%; overflow-y: auto; overflow-x: auto;}
 #inftb td{ border: 1px solid rgb(78, 78, 78);  padding: 2px 10px; position: absolute}
 #log { width: 200px; border: 1px solid #c6c6c6; max-height:50px; overflow-y: auto; margin: 0px 0px 10px 0px;position:absolute;bottom:0;}
+#info_kad {  border: 1px solid #c6c6c6;}
+#info_pole {  border: 1px solid #c6c6c6;}
 body{ font-family: "Arial"; font-size: 12px; background: #f8f7f7;}
 thead {  border: 0px; height:30px; }
 table {width: auto; margin: 10px 5px 10px 5px; border: 1px solid #dddddd; border-collapse: collapse; text-align: center;}
@@ -71,6 +73,16 @@ button, input, span, select,textarea {margin: 5px 5px 5px 5px;   font-family: "A
 <input id='pai'  name="checkbox" type="checkbox">КАДАСТР: Землі сільськогосподарського призначення
 <br>
 <input id='inshe'  name="checkbox" type="checkbox">КАДАСТР: Інше
+<br>
+<br>
+<br>
+ВИБРАНО ПОЛЕ
+<div id="info_pole"></div>
+<br>
+<br>
+<br>
+ВИБРАНО ДІЛЯНКУ&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(обрати кілька ділянок<input id='grup_info'  name="checkbox" type="checkbox">)
+<div id="info_kad"></div>
 <table id="unit_table"></table>
 <div id="log"></div>
 </div>     
