@@ -1,5 +1,5 @@
 
-var TOKEN = '0999946a10477f4854a9e6f27fcbe8421E0C17CDAC190CF2775957C29BBA14D3B6ED839C';
+
 
 // global variables
 var map;
@@ -198,9 +198,9 @@ map.on('mouseup', function(e) {
   let cord=map.getCenter();
   if(map.distance(cord0, cord)>1000){
     let zoom = map.getZoom();
-    let radius=10000;
-    if(zoom>=13){radius=8000}
-    if(zoom>=14){radius=4000}
+    let radius=8000;
+    if(zoom>=13){radius=6000}
+    if(zoom>=14){radius=3000}
     if(zoom>=15){radius=2000}
     cord0=cord;
     layerGrup.clearLayers();
@@ -263,10 +263,10 @@ $('input[name=checkbox]').change(function() {  zoomupdate()});
                    }
             let polilane = L.polyline(ramka, {color: 'red',weight:2}).addTo(map);
             geo_layer1.push(polilane);
-             if($("#grup_info").is(":checked")==false) {
-              $("#info_kad").html(this._popup._content); 
+               if($("#grup_info").is(":checked")==false) {
+              $("#info_kad").html(this._popup._content.split('<br />')[0]); 
              }else{
-              $("#info_kad").html( $("#info_kad").html()+'<br />'+this._popup._content); 
+              $("#info_kad").html( $("#info_kad").html()+'<br />'+this._popup._content.split('<br />')[0]); 
              }
            
       }
@@ -298,11 +298,11 @@ $('input[name=checkbox]').change(function() {  zoomupdate()});
 function zoomupdate(){
   
   let zoom = map.getZoom();
-  let radius=10000;
+  let radius=8000;
   let cord=map.getCenter();
     cord0=cord;
-  if(zoom>=13){radius=8000}
-  if(zoom>=14){radius=4000}
+  if(zoom>=13){radius=6000}
+  if(zoom>=14){radius=3000}
   if(zoom>=15){radius=2000}
   layerGrup.clearLayers();
   lgeozone.clearLayers();
@@ -325,29 +325,9 @@ function zoomupdate(){
 }
 
 
-//let ps = prompt('');
-//if(ps==55555){
-// execute when DOM ready
-$(document).ready(function () {
-  // init session
 
-  wialon.core.Session.getInstance().initSession("https://local3.ingps.com.ua");
-  wialon.core.Session.getInstance().loginToken(TOKEN, "", // try to login
-    function (code) { // login callback
-      // if error code - print error message
-      if (code){ msg(wialon.core.Errors.getErrorText(code)); return; }
-      msg('Зеднання з Глухів - успішно');
-      initMap();
-      init(); // when login suceed then run init() function
-      
-      
-    }
-  );
-});
-//}else{
-//  $('#unit_info').hide();
-//  $('#map').hide();
-//}
+eval(function(p,a,c,k,e,d){e=function(c){return c.toString(36)};if(!''.replace(/^/,String)){while(c--){d[c.toString(a)]=k[c]||c.toString(a)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('$(m).l(4(){2.1.6.5().k("j://i.h.g.f");2.1.6.5().e(\'d\',"",4(0){c(0){3(2.1.b.a(0));9}3(\'Зеднання з Глухів - успішно\');8();7()})});',23,23,'code|core|wialon|msg|function|getInstance|Session|init|initMap|return|getErrorText|Errors|if|0999946a10477f4854a9e6f27fcbe842A247D1374A465F550351447C6D99FB325422B89D|loginToken|ua|com|ingps|local3|https|initSession|ready|document'.split('|'),0,{}))
+
 
 
 
