@@ -57,7 +57,7 @@ let IDzonacord=[];
 let geold=null;
 function initUIData() {
   var session = wialon.core.Session.getInstance();
-  var resource = wialon.core.Session.getInstance().getItem(20030); //26227 - Gluhiv 20030 "11_ККЗ"
+  var resource = wialon.core.Session.getInstance().getItem(601000284); //26227 - Gluhiv 20030 "11_ККЗ"
     let gzgroop = resource.getZonesGroups();
   resource.getZonesData(null, function(code, geofences) {
     var cord=[];
